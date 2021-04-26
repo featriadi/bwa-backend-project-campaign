@@ -19,7 +19,6 @@ func APIResponse(message string, code int, status string, data interface{}) Resp
 		Code:    code,
 		Status:  status,
 	}
-
 	response := Response{
 		Meta: meta,
 		Data: data,

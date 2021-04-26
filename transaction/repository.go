@@ -4,6 +4,7 @@ import "gorm.io/gorm"
 
 type Repository interface {
 	GetByCampaignID(campaignID int) ([]Transaction, error)
+	GetByID(ID int) (Transaction, error)
 	GetByUserID(userID int) ([]Transaction, error)
 	Save(transaction Transaction) (Transaction, error)
 	Update(transaction Transaction) (Transaction, error)
@@ -21,6 +22,17 @@ func (r *repository) GetByCampaignID(campaignID int) ([]Transaction, error) {
 	var transactions []Transaction
 
 	err := r.db.Preload("User").Where("campaign_id = ?", campaignID).Order("id desc").Find(&transactions).Error
+	if err != nil {
+		return transactions, err
+	}
+
+	return transactions, nil
+}
+
+func (r *repository) GetByID(ID int) (Transaction, error) {
+	var transactions Transaction
+
+	err := r.db.Where("id = ?", ID).Find(&transactions).Error
 	if err != nil {
 		return transactions, err
 	}
